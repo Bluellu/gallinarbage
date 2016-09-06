@@ -20,10 +20,13 @@ public class PlayerController : MonoBehaviour {
             //Touch input
             if (Input.touchCount > 0) {
                 Touch touch = Input.touches[0];
-                if (touch.position.x > Screen.width / 2) { //Right touch
-                    move(1);
-                } else if (touch.position.x <= Screen.width / 2) { //Left touch
-                    move(0);
+                //only accept input at the beginning of touch
+                if (touch.phase == TouchPhase.Began) { 
+                    if (touch.position.x > Screen.width / 2) { //Right touch
+                        move(1);
+                    } else if (touch.position.x <= Screen.width / 2) { //Left touch
+                        move(0);
+                    }
                 }
 
             //Key input
@@ -61,6 +64,7 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
+    
     /* Jumps to the specified horizontal direction */
     IEnumerator jump(int direction) {
         jumping = true;
@@ -106,10 +110,10 @@ public class PlayerController : MonoBehaviour {
                 }
                 yield return new WaitForEndOfFrame();
             }
-
         }
         yield return 0;
     }
+
 
     /* Update x position as defined */
     void updateX(float x) {
