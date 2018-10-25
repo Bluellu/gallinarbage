@@ -51,9 +51,9 @@ public class PlayerController : MonoBehaviour {
 
     IEnumerator StartCountdown(int n)
     {
-        print(Time.time);
+        Debug.Log(Time.time);
         yield return new WaitForSeconds(n);
-        print(Time.time);
+        Debug.Log(Time.time);
     }
 
     /* Calculate whether player will move or jump to the specified direction. */
