@@ -9,7 +9,9 @@ public class StartScreen : MonoBehaviour {
     public Button quitButton;
 
     // Use this for initialization
-    void Start () {
+    void Start ()
+    {
+        // Set up button listeners.
         startButton.onClick.AddListener(StartGame);
         quitButton.onClick.AddListener(CloseGame);
     }
@@ -17,7 +19,7 @@ public class StartScreen : MonoBehaviour {
     /* Transition to gameplay scene. */
     void StartGame()
     {
-        SceneManager.LoadScene("test");
+        SceneManager.LoadScene(1);
     }
 
     /* Close application. */

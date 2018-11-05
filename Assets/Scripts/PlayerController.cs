@@ -1,12 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour {
+    public int lives;
     public float groundPos;
     public float maxJump;
     public float jumpSpeed;
     public float fallSpeed;
+
     private bool jumping;
+    private int availableLives;
 
     private Animator anim;
 
@@ -16,8 +20,9 @@ public class PlayerController : MonoBehaviour {
     }
 
     void Start() {
+        availableLives = lives;
         jumping = false;
-        StartCoroutine(StartCountdown(6)); // Time at Idle state
+        StartCoroutine(StartCountdown(10)); // Time at Idle state
         anim.SetTrigger("Run_R");
     }
 
@@ -49,11 +54,42 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    IEnumerator StartCountdown(int n)
+    /* Detect collisions with enemies and reduce the number of lives on damage. */
+    void OnTriggerEnter2D(Collider2D col)
     {
-        Debug.Log(Time.time);
+        Debug.Log("COLLISION/n");
+        if (col.gameObject.tag == "Enemy")
+        {
+            EnemyBehaviour enemyScript = col.gameObject.GetComponent<EnemyBehaviour>();
+
+            if (enemyScript.CanDamage())
+            {
+                availableLives--;
+                enemyScript.HasDamaged(); // Set enemy's ability to damage to false
+
+                // Play the appropriate damage animation
+                if (this.transform.position.x >= 0)
+                    anim.SetTrigger("Dmg_R");
+                else if (this.transform.position.x < 0)
+                    anim.SetTrigger("Dmg_L");
+
+                // Remove one life icon from the Canvas
+                if (availableLives >= 0)
+                {
+                    var lifeIcon = GameObject.Find("life" + (availableLives + 1));
+                    lifeIcon.SetActive(false);
+                    Debug.Log("life" + (availableLives + 1) + "\n");
+                }
+
+                if (availableLives < 0)
+                    SceneManager.LoadScene(2);
+            }
+        }
+    }
+    
+        IEnumerator StartCountdown(int n)
+    {
         yield return new WaitForSeconds(n);
-        Debug.Log(Time.time);
     }
 
     /* Calculate whether player will move or jump to the specified direction. */
