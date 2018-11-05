@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour {
     public int lives;
@@ -8,6 +9,13 @@ public class PlayerController : MonoBehaviour {
     public float maxJump;
     public float jumpSpeed;
     public float fallSpeed;
+    public float runSpeed; // Speed to simulate ascending motion.
+
+    public float startDelay; // Time in seconds to begin level.
+    public Text metersUpUI;
+    public PersistentData persistentData; // To pass final score into.
+    
+    private int metersUp;
 
     private bool jumping;
     private int availableLives;
@@ -28,6 +36,10 @@ public class PlayerController : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+        // Update meter counter 
+        metersUp = (int)(runSpeed * (Time.timeSinceLevelLoad - startDelay));
+        metersUpUI.text = metersUp + " meters";
+
         //accept input only if grounded
         if ((transform.position.x == groundPos) || 
             (transform.position.x == -groundPos)) { 
@@ -81,8 +93,12 @@ public class PlayerController : MonoBehaviour {
                     Debug.Log("life" + (availableLives + 1) + "\n");
                 }
 
+                // GAME OVER
                 if (availableLives < 0)
+                {
+                    persistentData.SetDistance(metersUp);
                     SceneManager.LoadScene(2);
+                }
             }
         }
     }
