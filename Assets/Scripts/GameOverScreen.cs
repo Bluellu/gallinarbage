@@ -20,6 +20,8 @@ public class GameOverScreen : MonoBehaviour {
 
         finalScore.text = "You got " + score + " meters up!";
 
+        Destroy(persistentData); // clean up score
+
         // Set up button listeners
         goBack.onClick.AddListener(ToStartScreen);
         tryAgain.onClick.AddListener(StartGame);
